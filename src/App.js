@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const cars = [
   { vin: "1HGCM82633A004352", model: "VW Golf", year: 2019, price: 18000, standzeit: 30 },
@@ -31,6 +31,10 @@ export default function App() {
   const [error, setError] = useState("");
   const [copiedVin, setCopiedVin] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    document.title = "Bewerbungsprojekt – Albert Korotaev";
+  }, []);
 
   const maxStandzeit = Math.max(...cars.map((c) => c.standzeit));
 
