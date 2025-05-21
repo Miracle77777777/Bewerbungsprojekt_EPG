@@ -6,11 +6,11 @@ const cars = [
   { vin: "WAUZZZ8K4BA123789", model: "Audi A4", year: 2020, price: 30000, standzeit: 20 },
 ];
 
-function Bar({ label, value, max }) {
+function Bar({ label, value, max, darkMode }) {
   const widthPercent = (value / max) * 100;
   return (
     <div style={{ marginBottom: 12 }}>
-      <div style={{ fontWeight: 600, marginBottom: 6, color: "#333" }}>{label}</div>
+      <div style={{ fontWeight: 600, marginBottom: 6, color: darkMode ? "#eee" : "#333" }}>{label}</div>
       <div
         style={{
           height: 24,
@@ -20,7 +20,7 @@ function Bar({ label, value, max }) {
           transition: "width 0.5s ease",
         }}
       />
-      <div style={{ fontSize: 14, color: "#555", marginTop: 4 }}>{value} Tage</div>
+      <div style={{ fontSize: 14, color: darkMode ? "#ccc" : "#555", marginTop: 4 }}>{value} Tage</div>
     </div>
   );
 }
@@ -30,6 +30,7 @@ export default function App() {
   const [car, setCar] = useState(null);
   const [error, setError] = useState("");
   const [copiedVin, setCopiedVin] = useState(null);
+  const [darkMode, setDarkMode] = useState(false);
 
   const maxStandzeit = Math.max(...cars.map((c) => c.standzeit));
 
@@ -59,6 +60,11 @@ export default function App() {
     }
   };
 
+  const bgColor = darkMode ? "#1e1e1e" : "#f9f9f9";
+  const textColor = darkMode ? "#eee" : "#222";
+  const inputBg = darkMode ? "#2e2e2e" : "#fff";
+  const borderColor = darkMode ? "#1abc9c" : "#1abc9c";
+
   return (
     <div
       style={{
@@ -66,10 +72,10 @@ export default function App() {
         maxWidth: 600,
         margin: "50px auto",
         padding: 20,
-        backgroundColor: "#f9f9f9",
+        backgroundColor: bgColor,
         borderRadius: 14,
         boxShadow: "0 6px 15px rgba(0,0,0,0.1)",
-        color: "#222",
+        color: textColor,
       }}
     >
       <header style={{ textAlign: "center", marginBottom: 40 }}>
@@ -77,16 +83,28 @@ export default function App() {
         <h3 style={{ fontWeight: "normal", color: "#1abc9c", marginTop: 0 }}>
           Bewerbung Wirtschaftsinformatik (dual)
         </h3>
-        <p style={{ fontStyle: "italic", color: "#666" }}>
+        <p style={{ fontStyle: "italic", color: darkMode ? "#aaa" : "#666" }}>
           Fahrzeugdetails per VIN-Suche & Standzeit-Visualisierung
         </p>
+        <button
+          onClick={() => setDarkMode(!darkMode)}
+          style={{
+            marginTop: 10,
+            backgroundColor: "#1abc9c",
+            border: "none",
+            color: "white",
+            padding: "6px 12px",
+            borderRadius: 6,
+            cursor: "pointer",
+            fontSize: 14,
+          }}
+        >
+          {darkMode ? "☀️ Hell" : "🌙 Dunkel"} Modus
+        </button>
       </header>
 
       <section style={{ marginBottom: 20 }}>
-        <label
-          htmlFor="vin-input"
-          style={{ fontWeight: 600, fontSize: 16, display: "block", marginBottom: 8 }}
-        >
+        <label htmlFor="vin-input" style={{ fontWeight: 600, fontSize: 16, display: "block", marginBottom: 8 }}>
           VIN eingeben:
         </label>
         <input
@@ -100,9 +118,11 @@ export default function App() {
             padding: "12px 16px",
             fontSize: 16,
             borderRadius: 8,
-            border: "2px solid #1abc9c",
+            border: `2px solid ${borderColor}`,
             outline: "none",
             boxSizing: "border-box",
+            backgroundColor: inputBg,
+            color: textColor,
           }}
           onKeyDown={(e) => e.key === "Enter" && handleSearch()}
         />
@@ -125,12 +145,12 @@ export default function App() {
       </section>
 
       <section style={{ marginBottom: 40 }}>
-        <p style={{ fontSize: 14, color: "#777" }}>Beispiel-VINs zum Testen:</p>
+        <p style={{ fontSize: 14, color: darkMode ? "#aaa" : "#777" }}>Beispiel-VINs zum Testen:</p>
         <ul style={{ listStyleType: "none", paddingLeft: 0, fontSize: 14 }}>
           {cars.map((car) => (
             <li
               key={car.vin}
-              style={{ marginBottom: 10, display: "flex", alignItems: "center", color: "#222" }}
+              style={{ marginBottom: 10, display: "flex", alignItems: "center", color: textColor }}
             >
               <code style={{ marginRight: 8 }}>{car.vin}</code> — {car.model}
               <button
@@ -194,18 +214,30 @@ export default function App() {
 
           <div style={{ marginTop: 40 }}>
             <h4 style={{ marginBottom: 12 }}>Standzeit (Tage)</h4>
-            <Bar label={car.model} value={car.standzeit} max={maxStandzeit} />
+            <Bar label={car.model} value={car.standzeit} max={maxStandzeit} darkMode={darkMode} />
           </div>
         </section>
       )}
+
+      <section style={{ marginTop: 60 }}>
+        <h3 style={{ borderBottom: "3px solid #1abc9c", paddingBottom: 8, marginBottom: 20 }}>
+          Warum diese Seite?
+        </h3>
+        <p style={{ lineHeight: 1.6, fontSize: 15, color: darkMode ? "#ccc" : "#444" }}>
+          Diese Website entstand im Rahmen meiner Bewerbung zum dualen Studium Wirtschaftsinformatik.
+          Ziel war es, eine kleine interaktive Anwendung mit React zu entwickeln, die Datenvisualisierung,
+          Benutzerfreundlichkeit und Suchlogik kombiniert. Sie zeigt mein Interesse an Technologie
+          und mein Verständnis für praxisnahe Softwarelösungen.
+        </p>
+      </section>
 
       <footer
         style={{
           marginTop: 60,
           fontSize: 13,
-          color: "#777",
+          color: darkMode ? "#999" : "#777",
           textAlign: "center",
-          borderTop: "1px solid #ddd",
+          borderTop: darkMode ? "1px solid #444" : "1px solid #ddd",
           paddingTop: 20,
         }}
       >
